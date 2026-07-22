@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN" translate="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="google" content="notranslate">
+<meta name="theme-color" content="#f6a8c4">
+<title>HSK 1 Reading, Writing & Susun Kalimat · Offline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --pink: #f6a8c4;
+        --pink-soft: #fbe0ea;
+        --cream: #fdf3e7;
+        --ink: #221f20;
+        --white: #ffffff;
+        --ok: #3f8f5f;
+        --ok-bg: #e6f4ea;
+        --bad: #d1495b;
+        --bad-bg: #fbe6e9;
+        --yellow: #f6c945;
+        --border: 3px solid var(--ink);
+        --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    body {
+        font-family: "Quicksand", "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: var(--cream);
+        margin: 0; padding: 0; color: var(--ink);
+        user-select: none !important; -webkit-user-select: none !important;
+    }
+    h1, h2, h3, .display-font { font-family: "Baloo 2", "PingFang SC", sans-serif; }
+
+    header {
+        background: var(--pink); color: var(--ink); padding: 16px 22px;
+        display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+        position: fixed; top: 0; width: 100%; box-sizing: border-box; z-index: 1000;
+        border-bottom: var(--border);
+    }
+    header .title { font-family: "Baloo 2", sans-serif; font-weight: 700; font-size: 18px; }
+    header .timer-box { font-family: "Baloo 2", sans-serif; font-size: 17px; font-weight: 700; background: var(--white); border: 2.5px solid var(--ink); padding: 6px 16px; border-radius: 999px; }
+
+    .container {
+        max-width: 740px; margin: 96px auto 40px auto; background: var(--white); padding: 32px;
+        border-radius: 28px; border: var(--border);
+    }
+
+    .login-screen {
+        max-width: 440px; margin: 70px auto; background: var(--white); padding: 40px 36px;
+        border-radius: 28px; border: var(--border); text-align: center; position: relative;
+    }
+    .login-screen .badge {
+        display: inline-block; background: var(--pink); border: 2.5px solid var(--ink); color: var(--ink);
+        font-family: "Baloo 2", sans-serif; font-weight: 700; padding: 6px 18px; border-radius: 999px;
+        margin-bottom: 18px; font-size: 13px; letter-spacing: 0.5px;
+    }
+    .login-screen h2 { color: var(--ink); margin: 0 0 6px 0; font-size: 26px; font-weight: 800; }
+    .login-screen p.sub { color: #6b6560; margin-bottom: 26px; font-size: 14px; font-weight: 600; }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--ink); font-size: 14px; }
+    .form-group input {
+        width: 100%; padding: 13px 14px; border: 2.5px solid var(--ink);
+        border-radius: 12px; box-sizing: border-box; font-size: 16px; font-family: "Quicksand", sans-serif; font-weight: 600;
+        background: var(--cream);
+    }
+    .form-group input:focus { outline: none; border-color: var(--ink); background: var(--white); }
+
+    .btn {
+        background: var(--pink); color: var(--ink); padding: 13px 25px; border: 2.5px solid var(--ink);
+        border-radius: 999px; cursor: pointer; font-size: 16px; font-weight: 700; width: 100%;
+        font-family: "Baloo 2", sans-serif; transition: transform .1s;
+        box-shadow: 4px 4px 0 var(--ink);
+    }
+    .btn:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--ink); }
+    .btn:active { transform: translate(0,0); box-shadow: 2px 2px 0 var(--ink); }
+    .btn.secondary { background: var(--white); }
+    .btn.green { background: #b9e6b0; }
+
+    .exam-info {
+        background: var(--pink-soft); padding: 16px 18px; border-radius: var(--radius);
+        margin-bottom: 26px; line-height: 1.7; border: 2.5px solid var(--ink); font-weight: 600; font-size: 14px;
+    }
+    .exam-info strong { font-family: "Baloo 2", sans-serif; }
+
+    .section-title {
+        font-family: "Baloo 2", sans-serif; font-weight: 700; font-size: 17px; margin: 26px 0 10px 0;
+        background: var(--yellow); display: inline-block; padding: 6px 16px; border-radius: 999px;
+        border: 2.5px solid var(--ink);
+    }
+
+    .question-block {
+        padding: 20px 18px; margin: 14px 0; background: var(--cream);
+        border: 2.5px solid var(--ink); border-radius: var(--radius);
+    }
+    .question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .question-header strong { font-family: "Baloo 2", sans-serif; font-size: 15px; }
+    .question-text { font-size: 18px; font-weight: 600; margin-bottom: 10px; line-height: 1.6; }
+
+    .flag-btn { background: var(--white); border: 2px solid var(--ink); color: var(--ink); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 12px; font-weight: 700; font-family: "Baloo 2", sans-serif; }
+    .flag-btn.flagged { background: var(--yellow); }
+
+    .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 10px; }
+    .option-label {
+        display: flex; align-items: center; padding: 11px 12px; border: 2.5px solid var(--ink);
+        border-radius: 12px; cursor: pointer; transition: 0.15s; background: var(--white); font-weight: 600;
+    }
+    .option-label:hover { background-color: var(--pink-soft); }
+    .option-label input { margin-right: 10px; transform: scale(1.2); accent-color: var(--ink); }
+
+    .hidden { display: none !important; }
+
+    /* Susun kalimat (sentence ordering) */
+    .order-answer-slot {
+        min-height: 56px; background: var(--white); border: 2.5px dashed var(--ink); border-radius: 14px;
+        padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; align-items: center;
+    }
+    .order-answer-slot .placeholder-text { color: #9a9490; font-size: 13px; font-weight: 600; }
+    .word-chip {
+        display: inline-flex; align-items: center; padding: 8px 14px; border: 2.5px solid var(--ink);
+        border-radius: 999px; cursor: pointer; font-size: 16px; font-weight: 700; background: var(--pink);
+        font-family: "Baloo 2", sans-serif; user-select: none;
+    }
+    .word-bank { display: flex; flex-wrap: wrap; gap: 8px; }
+    .word-bank .word-chip { background: var(--white); }
+    .word-bank .word-chip.used { display: none; }
+    .order-reset-btn { margin-top: 10px; background: var(--white); border: 2px solid var(--ink); border-radius: 999px; padding: 6px 14px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: "Baloo 2", sans-serif; }
+
+    /* Writing */
+    textarea.writing-input {
+        width: 100%; min-height: 110px; border: 2.5px solid var(--ink); border-radius: 14px; padding: 12px 14px;
+        font-size: 16px; font-family: "Quicksand", sans-serif; font-weight: 600; resize: vertical; background: var(--white);
+    }
+    textarea.writing-input:focus { outline: none; }
+
+    .result-card { border-radius: 16px; padding: 14px 16px; margin-bottom: 12px; border: 2.5px solid var(--ink); }
+    .result-card.correct { background: var(--ok-bg); }
+    .result-card.wrong { background: var(--bad-bg); }
+    .result-card.manual { background: var(--pink-soft); }
+    .score-box { display: flex; gap: 16px; flex-wrap: wrap; margin: 22px 0; }
+    .score-pill { flex: 1; min-width: 150px; background: var(--pink-soft); border-radius: 18px; padding: 18px; text-align: center; border: 2.5px solid var(--ink); }
+    .score-pill .num { font-family: "Baloo 2", sans-serif; font-size: 30px; font-weight: 800; color: var(--ink); }
+
+    .nav-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin: 18px 0; }
+    .nav-item { height: 34px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--ink); border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 700; font-family: "Baloo 2", sans-serif; background: var(--white); }
+    .nav-item.answered { background-color: #b9e6b0 !important; }
+    .nav-item.flagged { background-color: var(--yellow) !important; }
+
+    .download-bar { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+    .download-bar .btn { width: auto; flex: 1; min-width: 200px; }
+
+    @media (max-width: 600px) {
+        .container { margin: 84px 10px 20px 10px; padding: 18px; border-radius: 20px; }
+        .login-screen { margin: 20px auto; padding: 28px 20px; max-width: 100%; box-shadow: none; min-height: 100vh; box-sizing: border-box; border-radius: 0; border: none; }
+        .question-text { font-size: 16px; }
+        .options { grid-template-columns: 1fr; gap: 8px; }
+        .option-label { padding: 12px 10px; font-size: 15px; }
+        .option-label input { transform: scale(1.4); margin-right: 12px; }
+        .nav-grid { grid-template-columns: repeat(5, 1fr); }
+        .btn { font-size: 15px; padding: 14px; }
+        .word-chip { font-size: 15px; padding: 7px 12px; }
+    }
+</style>
+</head>
+<body>
+
+<div id="login-screen" class="login-screen">
+    <div class="badge">HSK 1 · OFFLINE</div>
+    <h2>Reading, Writing &amp; Susun Kalimat</h2>
+    <p class="sub">Dibuat oleh Ranir Atfar R</p>
+    <div class="form-group">
+        <label>Nama Lengkap (tidak tersimpan di server)</label>
+        <input type="text" id="student-name" placeholder="Tulis nama Anda" autocomplete="off">
+    </div>
+    <button class="btn" id="btn-login" onclick="startExam()">Mulai Kuis 🚀</button>
+</div>
+
+<header id="exam-header" class="hidden">
+    <div class="title">HSK 1 · Reading, Writing &amp; Susun Kalimat</div>
+    <div>Peserta: <span id="display-name"></span></div>
+    <div class="timer-box">⏱ <span id="timer">00:00</span></div>
+</header>
+
+<div id="exam-container" class="container hidden">
+    <div class="exam-info">
+        <strong>📝 Petunjuk:</strong> Kuis ini menggunakan soal yang disusun berdasarkan materi dari <strong>Laoshi Chikita</strong>. Terdiri dari <strong>Susun Kalimat</strong> (klik kata sesuai urutan yang benar), <strong>Pilihan Ganda</strong> (isi bagian rumpang & pemahaman bacaan), dan <strong>Menulis</strong> (terjemahkan kalimat Bahasa Indonesia ke Mandarin menggunakan Hanzi). Seluruh jawaban dinilai <strong>secara otomatis oleh AI</strong>, sehingga hasil penilaian mungkin belum selalu 100% akurat. Waktu pengerjaan adalah <strong>2 menit per soal</strong>. Setelah selesai, hasil ujian dapat diunduh dalam format <strong>CSV/Excel</strong> untuk disimpan secara offline.
+        <br><br>
+        <strong>💪 加油，朋友们！(Jiāyóu, péngyoumen!)</strong>
+    </div>
+
+    <div class="nav-grid" id="nav-grid-container"></div>
+
+    <form id="exam-form">
+        <div id="questions-wrapper"></div>
+        <br>
+        <button type="button" class="btn green" style="font-size: 18px; padding: 16px;" onclick="submitExam()">✅ Kumpulkan Jawaban</button>
+    </form>
+</div>
+
+
+<div id="result-container" class="container hidden"></div>
+
+<script>
+/* ===================== DATA SOAL ===================== */
+/* 1) SUSUN KALIMAT (sentence ordering) - words: kata acak, ans: urutan kata yang benar */
+const orderQuestions = [
+    {words:["左右","商店","早上","八点","开门","每天"], ans:["每天","商店","早上","八点","左右","开门"], q_mark:false},
+    {words:["左右","我们","在","医院","等了","十分钟"], ans:["我们","在","医院","等了","十分钟","左右"], q_mark:false},
+    {words:["才","他","慢","说得","一点儿","我","听懂"], ans:["他","说得","慢","一点儿","我","才","听懂"], q_mark:false},
+    {words:["才","觉得","那双","鞋","这个","不好看","好看"], ans:["觉得","这个","不好看","那双","鞋","才","好看"], q_mark:false},
+    {words:["差不多","准备","两个小时","还需要","好了","我"], ans:["我","还需要","两个小时","差不多","准备","好了"], q_mark:false},
+    {words:["差不多","做了","这里的","工作","我","两年"], ans:["这里的","工作","我","做了","差不多","两年"], q_mark:false},
+    {words:["还可以","咖啡","这里的","我","不错","觉得"], ans:["这里的","咖啡","还可以","我","觉得","不错"], q_mark:false},
+    {words:["还可以","这个","菜","我","觉得","虽然","一般"], ans:["虽然","这个","菜","一般","我","觉得","还可以"], q_mark:false},
+    {words:["了","变得","漂亮","你","几年","没见","很多"], ans:["几年","没见","你","变得","漂亮","很多","了"], q_mark:false},
+    {words:["了","东西","已经","卖完","商店里","的"], ans:["商店里","的","东西","已经","卖完","了"], q_mark:false},
+    {words:["有点儿","衣服","这件","贵","觉得","我"], ans:["我","觉得","这件","衣服","有点儿","贵"], q_mark:false},
+    {words:["有点儿","觉得","舒服","不","今天","我","不想","出去"], ans:["今天","我","觉得","有点儿","不","舒服","不想","出去"], q_mark:false},
+    {words:["一点儿","说话","能不能","大声","清楚","让","大家","听懂"], ans:["能不能","说话","清楚","大声","一点儿","让","大家","听懂"], q_mark:true},
+    {words:["一点儿","便宜","能不能","给","价格","我","再"], ans:["价格","能不能","再","给","我","便宜","一点儿"], q_mark:true},
+    {words:["算了","太贵了","衣服","这件","还是","不买"], ans:["这件","衣服","太贵了","还是","算了","不买"], q_mark:false}
+];
+
+/* 2) PILIHAN GANDA - isian rumpang berbasis kotak kata (第51-60题) */
+const mcQuestions = [
+    {t:"电影快要（　）了，我们进去吧。", options:{A:"觉得",B:"一起",C:"开始",D:"生病",E:"找"}, ans:"C"},
+    {t:"我昨天（　）了，所以没去学校。", options:{A:"觉得",B:"一起",C:"开始",D:"生病",E:"找"}, ans:"D"},
+    {t:"你想不想和我们（　）去公园？", options:{A:"觉得",B:"一起",C:"开始",D:"生病",E:"找"}, ans:"B"},
+    {t:"我的手机不见了，我正在（　）它。", options:{A:"觉得",B:"一起",C:"开始",D:"生病",E:"找"}, ans:"E"},
+    {t:"我（　）今天的天气很好。", options:{A:"觉得",B:"一起",C:"开始",D:"生病",E:"找"}, ans:"A"},
+    {t:"医生说你应该多（　），不要太累。", options:{A:"休息",B:"迟到",C:"便宜",D:"运动",E:"附近"}, ans:"A"},
+    {t:"我家（　）有一个超市。", options:{A:"休息",B:"迟到",C:"便宜",D:"运动",E:"附近"}, ans:"E"},
+    {t:"他今天起晚了，所以（　）了。", options:{A:"休息",B:"迟到",C:"便宜",D:"运动",E:"附近"}, ans:"B"},
+    {t:"我每天晚上都去公园（　）。", options:{A:"休息",B:"迟到",C:"便宜",D:"运动",E:"附近"}, ans:"D"},
+    {t:"我（　）不喜欢喝咖啡，现在很喜欢。", options:{A:"休息",B:"迟到",C:"便宜",D:"运动",E:"以前"}, ans:"E"}
+];
+
+/* 3) PILIHAN GANDA - pemahaman bacaan (第69-90题) */
+const readingQuestions = [
+    {t:"今天下午两点我们在学校门口见面，然后一起去图书馆学习。 ★ 他们几点见面？", options:{A:"一点",B:"两点",C:"三点",D:"四点"}, ans:"B"},
+    {t:"姐姐喜欢吃水果，但是不喜欢吃香蕉，她最喜欢苹果。 ★ 姐姐最喜欢什么？", options:{A:"香蕉",B:"苹果",C:"西瓜",D:"葡萄"}, ans:"B"},
+    {t:"今天下雨了，所以我没有骑自行车去学校，而是坐公共汽车。 ★ 我今天怎么去学校？", options:{A:"骑自行车",B:"坐出租车",C:"坐公共汽车",D:"走路"}, ans:"C"},
+    {t:"王老师今年三十五岁，比李老师大五岁。 ★ 李老师今年多少岁？", options:{A:"二十五岁",B:"三十岁",C:"三十五岁",D:"四十岁"}, ans:"B"},
+    {t:"妈妈正在厨房做饭，爸爸在客厅看报纸，弟弟在房间写作业。 ★ 爸爸在哪里？", options:{A:"房间",B:"厨房",C:"客厅",D:"学校"}, ans:"C"},
+    {t:"我昨天发烧了，所以没有去上班，在家休息了一天。 ★ 我昨天为什么没上班？", options:{A:"很忙",B:"发烧了",C:"去旅游",D:"下雨了"}, ans:"B"},
+    {t:"现在九点四十五分，还有十五分钟开始考试。 ★ 考试几点开始？", options:{A:"九点半",B:"十点",C:"十一点",D:"九点四十五分"}, ans:"B"},
+    {t:"这个杯子二十块钱，那个杯子三十五块钱，这个更便宜。 ★ 哪个杯子便宜？", options:{A:"二十块钱的",B:"三十五块钱的",C:"一样贵",D:"不知道"}, ans:"A"},
+    {t:"妹妹每天晚上十点睡觉，早上六点半起床。 ★ 妹妹什么时候起床？", options:{A:"六点",B:"六点半",C:"七点",D:"八点"}, ans:"B"},
+    {t:"今天星期五，明天不用上班，因为是星期六。 ★ 明天星期几？", options:{A:"星期四",B:"星期五",C:"星期六",D:"星期天"}, ans:"C"},
+    {t:"我们学校旁边有一家银行，对面有一家超市。 ★ 超市在哪里？", options:{A:"学校旁边",B:"银行里面",C:"学校对面",D:"医院旁边"}, ans:"C"},
+    {t:"哥哥会说英语，也会说一点儿汉语。 ★ 哥哥会说什么？", options:{A:"英语和一点儿汉语",B:"只有英语",C:"日语",D:"法语"}, ans:"A"},
+    {t:"今天很冷，我穿了一件厚外套，还戴了帽子。 ★ 今天天气怎么样？", options:{A:"很热",B:"很冷",C:"很凉快",D:"下雪"}, ans:"B"},
+    {t:"爸爸每天开车去公司，今天车坏了，所以坐地铁。 ★ 爸爸今天怎么去公司？", options:{A:"开车",B:"坐公共汽车",C:"坐地铁",D:"骑自行车"}, ans:"C"},
+    {t:"妈妈买了很多菜，准备晚上给我们做饭。 ★ 妈妈准备做什么？", options:{A:"买衣服",B:"做饭",C:"看电影",D:"睡觉"}, ans:"B"},
+    {t:"我觉得这件衣服太贵了，不想买。 ★ 为什么不买？", options:{A:"太小了",B:"太大了",C:"太贵了",D:"不漂亮"}, ans:"C"},
+    {t:"弟弟正在房间里看书，妹妹在客厅看电视。 ★ 弟弟在做什么？", options:{A:"看电视",B:"看书",C:"写字",D:"吃饭"}, ans:"B"},
+    {t:"今天下午我要去医院看朋友，不是去看医生。 ★ 我要去医院做什么？", options:{A:"看病",B:"看朋友",C:"工作",D:"买药"}, ans:"B"},
+    {t:"我找不到手机了，所以很着急。 ★ 我现在怎么样？", options:{A:"很高兴",B:"很累",C:"很着急",D:"很饿"}, ans:"C"},
+    {t:"今天是妈妈的生日，我们买了一个大蛋糕。 ★ 今天是谁的生日？", options:{A:"爸爸",B:"哥哥",C:"妈妈",D:"奶奶"}, ans:"C"},
+    {t:"小王喜欢跑步，也喜欢游泳，但是最喜欢打篮球。 ★ 小王最喜欢什么？", options:{A:"跑步",B:"游泳",C:"打篮球",D:"足球"}, ans:"C"},
+    {t:"老师说：“明天八点考试，请不要迟到。” ★ 老师希望学生怎么样？", options:{A:"不要迟到",B:"早点回家",C:"多吃饭",D:"多睡觉"}, ans:"A"}
+];
+
+/* 4) MENULIS (translate) - terjemahkan kalimat Indonesia ke Mandarin (Hanzi), dinilai OTOMATIS */
+const writingQuestions = [
+    {prompt:"Saya pergi ke sekolah setiap pagi jam delapan.", ans:["我每天早上八点去学校","每天早上我八点去学校","每天早上八点我去学校"]},
+    {prompt:"Saya sangat senang berkenalan denganmu.", ans:["我很高兴认识你","很高兴认识你","认识你我很高兴"]},
+    {prompt:"Hari ini cuacanya sangat bagus.", ans:["今天天气很好","今天的天气很好"]}
+];
+
+/* ===================== GABUNGKAN & BERI NOMOR URUT 1..N ===================== */
+const questions = [];
+let qCounter = 1;
+orderQuestions.forEach(o => questions.push({q:qCounter++, type:"order", words:o.words, ans:o.ans, q_mark:o.q_mark}));
+mcQuestions.forEach(o => questions.push({q:qCounter++, type:"mc", t:o.t, options:o.options, ans:o.ans}));
+readingQuestions.forEach(o => questions.push({q:qCounter++, type:"mc", t:o.t, options:o.options, ans:o.ans}));
+writingQuestions.forEach(o => questions.push({q:qCounter++, type:"translate", prompt:o.prompt, ans:o.ans}));
+
+const TOTAL_QUESTIONS = questions.length;
+const GRADED_TOTAL = questions.length; // semua tipe soal sekarang dinilai otomatis
+let totalDuration = TOTAL_QUESTIONS * 2 * 60; // 2 menit per soal
+let countdownTimer;
+let studentName = "";
+let examStarted = false;
+const orderState = {}; // {qNum: {bankOrder:[...], chosen:[...]}}
+
+function buildHeaderHTML(qNum, label) {
+    return `<div class="question-header">
+                <strong>${label} — Soal No. ${qNum}</strong>
+                <button type="button" class="flag-btn" id="flag-${qNum}" onclick="toggleFlag(${qNum})">⭐ Tandai</button>
+            </div>`;
+}
+
+function shuffleArray(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function initQuestions() {
+    let html = "";
+    let sectionShown = {};
+
+    questions.forEach(item => {
+        if (item.type === "order" && !sectionShown.order) {
+            html += `<div class="section-title">✏️ Susun Kalimat</div>`;
+            sectionShown.order = true;
+        }
+        if (item.type === "mc" && !sectionShown.mc) {
+            html += `<div class="section-title">🔤 Pilihan Ganda</div>`;
+            sectionShown.mc = true;
+        }
+        if (item.type === "translate" && !sectionShown.translate) {
+            html += `<div class="section-title">📖 Menulis: Terjemahkan ke Mandarin</div>`;
+            sectionShown.translate = true;
+        }
+
+        if (item.type === "order") {
+            const shuffled = shuffleArray(item.words);
+            orderState[item.q] = { bank: shuffled, chosen: [] };
+            let bankHtml = shuffled.map((w, idx) =>
+                `<span class="word-chip" id="bank-${item.q}-${idx}" onclick="pickWord(${item.q}, ${idx})">${w}</span>`
+            ).join("");
+            html += `<div class="question-block" id="block-${item.q}">
+                        ${buildHeaderHTML(item.q, "Susun Kalimat")}
+                        <div class="question-text">Susun kata-kata berikut menjadi kalimat yang benar:</div>
+                        <div class="order-answer-slot" id="slot-${item.q}"><span class="placeholder-text">Klik kata di bawah untuk menyusun kalimat...</span></div>
+                        <div class="word-bank" id="bank-${item.q}">${bankHtml}</div>
+                        <button type="button" class="order-reset-btn" onclick="resetOrder(${item.q})">↺ Ulangi Susunan</button>
+                        <input type="hidden" name="q${item.q}" id="hidden-${item.q}">
+                     </div>`;
+        } else if (item.type === "mc") {
+            let optHtml = "";
+            Object.keys(item.options).forEach(letter => {
+                optHtml += `<label class="option-label"><input type="radio" name="q${item.q}" value="${letter}" onchange="markAnswered(${item.q})"> ${letter}. ${item.options[letter]}</label>`;
+            });
+            html += `<div class="question-block" id="block-${item.q}">
+                        ${buildHeaderHTML(item.q, "Pilihan Ganda")}
+                        <div class="question-text">${item.t}</div>
+                        <div class="options" style="grid-template-columns: 1fr;">${optHtml}</div>
+                     </div>`;
+        } else if (item.type === "translate") {
+            html += `<div class="question-block" id="block-${item.q}">
+                        ${buildHeaderHTML(item.q, "Menerjemahkan")}
+                        <div class="question-text">Terjemahkan kalimat berikut ke Mandarin (pakai Hanzi):<br><em>"${item.prompt}"</em></div>
+                        <textarea class="writing-input" name="q${item.q}" placeholder="输入中文翻译... (tulis terjemahan dalam Hanzi)" oninput="markAnswered(${item.q})"></textarea>
+                     </div>`;
+        }
+    });
+
+    document.getElementById('questions-wrapper').innerHTML = html;
+
+    let gridHtml = "";
+    for (let i = 1; i <= TOTAL_QUESTIONS; i++) {
+        gridHtml += `<div class="nav-item" id="nav-item-${i}" onclick="scrollToQuestion(${i})">${i}</div>`;
+    }
+    document.getElementById('nav-grid-container').innerHTML = gridHtml;
+}
+
+function pickWord(qNum, bankIdx) {
+    const state = orderState[qNum];
+    const chip = document.getElementById(`bank-${qNum}-${bankIdx}`);
+    if (chip.classList.contains('used')) return;
+    chip.classList.add('used');
+    state.chosen.push(bankIdx);
+    renderSlot(qNum);
+    markAnswered(qNum);
+}
+
+function removeWord(qNum, chosenPos) {
+    const state = orderState[qNum];
+    const bankIdx = state.chosen[chosenPos];
+    state.chosen.splice(chosenPos, 1);
+    document.getElementById(`bank-${qNum}-${bankIdx}`).classList.remove('used');
+    renderSlot(qNum);
+}
+
+function resetOrder(qNum) {
+    const state = orderState[qNum];
+    state.chosen.forEach(bankIdx => document.getElementById(`bank-${qNum}-${bankIdx}`).classList.remove('used'));
+    state.chosen = [];
+    renderSlot(qNum);
+}
+
+function renderSlot(qNum) {
+    const state = orderState[qNum];
+    const slot = document.getElementById(`slot-${qNum}`);
+    if (state.chosen.length === 0) {
+        slot.innerHTML = `<span class="placeholder-text">Klik kata di bawah untuk menyusun kalimat...</span>`;
+    } else {
+        slot.innerHTML = state.chosen.map((bankIdx, pos) =>
+            `<span class="word-chip" onclick="removeWord(${qNum}, ${pos})">${state.bank[bankIdx]}</span>`
+        ).join("");
+    }
+    document.getElementById(`hidden-${qNum}`).value = state.chosen.map(bankIdx => state.bank[bankIdx]).join("|");
+}
+
+function scrollToQuestion(qNum) {
+    document.getElementById(`block-${qNum}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function markAnswered(qNum) { document.getElementById(`nav-item-${qNum}`).classList.add('answered'); }
+function toggleFlag(qNum) {
+    document.getElementById(`flag-${qNum}`).classList.toggle('flagged');
+    document.getElementById(`nav-item-${qNum}`).classList.toggle('flagged');
+}
+
+function startExam() {
+    studentName = document.getElementById('student-name').value.trim();
+    if (!studentName) {
+        alert("Silakan isi nama Anda terlebih dahulu.");
+        return;
+    }
+    document.getElementById('display-name').innerText = studentName;
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('exam-header').classList.remove('hidden');
+    document.getElementById('exam-container').classList.remove('hidden');
+
+    examStarted = true;
+    initQuestions();
+    startTimer();
+}
+
+function startTimer() {
+    updateTimerDisplay();
+    countdownTimer = setInterval(() => {
+        totalDuration--;
+        updateTimerDisplay();
+        if (totalDuration <= 0) {
+            clearInterval(countdownTimer);
+            alert("Waktu habis! Jawaban akan otomatis dikumpulkan.");
+            submitExam(true);
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    let mins = Math.floor(totalDuration / 60);
+    let secs = totalDuration % 60;
+    document.getElementById('timer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+function getMcAnswerText(item, val) {
+    if (!val || val === '-') return '(tidak dijawab)';
+    return item.options[val] ? `${val}. ${item.options[val]}` : val;
+}
+
+function normalizeHanzi(str) {
+    return (str || "")
+        .replace(/[\s]/g, "")
+        .replace(/[。，！？、,.!?"“”‘’·；;:：]/g, "");
+}
+
+let lastResults = []; // disimpan untuk export CSV
+
+function submitExam(isAuto) {
+    if (!isAuto && !confirm("Yakin ingin mengumpulkan jawaban sekarang?")) return;
+
+    clearInterval(countdownTimer);
+    document.getElementById('exam-header').classList.add('hidden');
+    document.getElementById('exam-container').classList.add('hidden');
+
+    const formData = new FormData(document.getElementById('exam-form'));
+
+    let correct = 0;
+    let detailHtml = "";
+    lastResults = [];
+
+    questions.forEach(item => {
+        if (item.type === "order") {
+            const raw = (formData.get(`q${item.q}`) || "").trim();
+            const userWords = raw ? raw.split("|") : [];
+            const userSentence = userWords.join("") + (item.q_mark ? "？" : "。");
+            const correctSentence = item.ans.join("") + (item.q_mark ? "？" : "。");
+            const isCorrect = userWords.length === item.ans.length && userWords.every((w, i) => w === item.ans[i]);
+            if (isCorrect) correct++;
+
+            detailHtml += `<div class="result-card ${isCorrect ? 'correct' : 'wrong'}">
+                    <strong>Soal ${item.q} (Susun Kalimat)</strong><br>
+                    Jawaban Anda: <strong>${userWords.length ? userSentence : '(tidak dijawab)'}</strong> ${isCorrect ? '✅' : `❌<br>Jawaban benar: <strong>${correctSentence}</strong>`}
+                </div>`;
+
+            lastResults.push({no: item.q, tipe: "Susun Kalimat", soal: item.words.join(" / "), jawaban: userWords.length ? userSentence : "(tidak dijawab)", benar: correctSentence, status: isCorrect ? "Benar" : "Salah"});
+
+        } else if (item.type === "mc") {
+            const userAns = (formData.get(`q${item.q}`) || "-").trim();
+            const isCorrect = userAns === item.ans;
+            if (isCorrect) correct++;
+
+            const userAnsText = getMcAnswerText(item, userAns);
+            const correctAnsText = getMcAnswerText(item, item.ans);
+
+            detailHtml += `<div class="result-card ${isCorrect ? 'correct' : 'wrong'}">
+                    <strong>Soal ${item.q} (Pilihan Ganda)</strong><br>
+                    ${item.t}<br>
+                    Jawaban Anda: <strong>${userAnsText}</strong> ${isCorrect ? '✅' : `❌ (Jawaban benar: <strong>${correctAnsText}</strong>)`}
+                </div>`;
+
+            lastResults.push({no: item.q, tipe: "Pilihan Ganda", soal: item.t, jawaban: userAnsText, benar: correctAnsText, status: isCorrect ? "Benar" : "Salah"});
+
+        } else if (item.type === "translate") {
+            const userText = (formData.get(`q${item.q}`) || "").trim();
+            const userNorm = normalizeHanzi(userText);
+            const isCorrect = item.ans.some(a => normalizeHanzi(a) === userNorm) && userNorm.length > 0;
+            if (isCorrect) correct++;
+
+            const correctDisplay = item.ans[0] + "。";
+            detailHtml += `<div class="result-card ${isCorrect ? 'correct' : 'wrong'}">
+                    <strong>Soal ${item.q} (Menerjemahkan)</strong><br>
+                    "${item.prompt}"<br>
+                    Jawaban Anda: <strong>${userText || '(tidak dijawab)'}</strong> ${isCorrect ? '✅' : `❌ (Jawaban benar: <strong>${correctDisplay}</strong>)`}
+                </div>`;
+
+            lastResults.push({no: item.q, tipe: "Menerjemahkan", soal: item.prompt, jawaban: userText || "(tidak dijawab)", benar: correctDisplay, status: isCorrect ? "Benar" : "Salah"});
+        }
+    });
+
+    const nilai = Math.round((correct / GRADED_TOTAL) * 100);
+
+    const resultHtml = `
+        <h2 style="color:var(--ink);">✅ Hasil Kuis — ${studentName}</h2>
+        <p style="color:#6b6560; font-weight:600;">Kuis ini tidak menyimpan data ke server; hasil hanya ada di layar dan file yang Anda unduh sendiri.</p>
+        <div class="score-box">
+            <div class="score-pill"><div class="num">${correct}/${GRADED_TOTAL}</div>Skor Benar (Otomatis)</div>
+            <div class="score-pill"><div class="num">${nilai}</div>Nilai (skala 100)</div>
+            <div class="score-pill"><div class="num">${writingQuestions.length}</div>Soal Terjemahan (Otomatis)</div>
+        </div>
+        <div class="download-bar">
+            <button type="button" class="btn secondary" onclick="downloadCSV()">📥 Unduh Hasil (CSV/Excel)</button>
+            <button type="button" class="btn" onclick="location.reload()">🔁 Ulangi Kuis</button>
+        </div>
+        ${detailHtml}
+        <div class="download-bar">
+            <button type="button" class="btn secondary" onclick="downloadCSV()">📥 Unduh Hasil (CSV/Excel)</button>
+            <button type="button" class="btn" onclick="location.reload()">🔁 Ulangi Kuis</button>
+        </div>
+    `;
+
+    const resultContainer = document.getElementById('result-container');
+    resultContainer.innerHTML = resultHtml;
+    resultContainer.classList.remove('hidden');
+    window.scrollTo(0, 0);
+}
+
+function csvEscape(val) {
+    const s = String(val).replace(/"/g, '""');
+    return `"${s}"`;
+}
+
+function downloadCSV() {
+    const rows = [["No", "Tipe Soal", "Soal", "Jawaban Anda", "Jawaban Benar", "Status"]];
+    lastResults.forEach(r => rows.push([r.no, r.tipe, r.soal, r.jawaban, r.benar, r.status]));
+
+    const csvContent = "\uFEFF" + rows.map(row => row.map(csvEscape).join(",")).join("\r\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const safeName = studentName.replace(/[^a-zA-Z0-9]/g, "_") || "Peserta";
+    const dateStr = new Date().toISOString().slice(0,10);
+    a.href = url;
+    a.download = `Hasil_HSK1_${safeName}_${dateStr}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
